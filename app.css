@@ -1,0 +1,41 @@
+.color-1{
+    height: 500px;
+    border: 2px solid black;
+    color: white;
+    font-size: 100px;
+    line-height: 500px;
+}
+
+.color-2{
+    height: 500px;
+    border: 2px solid black;
+    color: white;
+    font-size: 100px;
+    line-height: 500px;
+}
+
+.scoring-row{
+    font-size: 30px;
+
+}
+
+#score-box{
+    background-color: orange;
+}
+
+#timer-box{
+    background-color: green;
+}
+
+#level-box{
+    background-color: pink;
+}
+
+.button{
+    background-color: #1610B5;
+}
+
+.button:hover{
+    background: red;
+}
+

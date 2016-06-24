@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="foundation.min.css" type="text/css" />
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <title>ClrPkr</title>
+</head>
+<body>
+<div class="row text-center">
+    <h1>ClrPkr</h1>
+    <p>Select the darker color!</p>
+</div>
+
+<div class="row colors-box">
+    <div class="small-6 column text-center color-1"></div>
+    <div class="small-6 column text-center color-2"></div>
+</div>
+
+<div class="row scoring-row">
+    <div class="small-4 column text-center callout" id="score-box">
+        Score
+        <div id="score">0</div>
+    </div>
+    <div class="small-4 column text-center callout" id="timer-box">
+        Time
+        <div id="timer">15</div>
+    </div>
+    <div class="small-4 column text-center callout" id="level-box">
+        Level
+        <div id='level'>1</div>
+    </div>
+</div>
+
+<div class="row text-center">
+    <a class="button large" onclick="newGame()">Start New Game</a>
+</div>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="app.js"></script>
+</body>
+</html>
