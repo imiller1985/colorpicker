@@ -6,17 +6,17 @@ function randomColors() {
     $('.color-2').css('background-color', colors.secondColor);
 };
 
-    function findOpacity(target) {
-        return target.css('background-color').split(',')[3].trim();
-    };
+function findOpacity(target) {
+    return target.css('background-color').split(',')[3].trim();
+};
+
+function borderReset(target) {
+    return target.css('border', '2px solid black')
+};
 
 function selectionChecker (event) {
 // DRY function for finding opacity level
     var $target = $(event.target)
-
-    function borderReset(target) {
-        return target.css('border', '2px solid black')
-    };
 
     function scoreBoxColor() {
         console.log(currentGame.score)
@@ -68,42 +68,34 @@ function newGame () {
     currentGame = new Game();
     var backgroundColor = 0;
     randomColors();
-//resets the color box scores, borders, and text
+//resets the color box scores, borders, timer, and text
     $('#score').html(currentGame.score);
     $('#level').html(currentGame.level);
     $('.colors-box').css('border', 'none');
     $('.color-1').html('');
     $('.color-2').html('');
     timer();
+    borderReset($('.color-1'));
+    borderReset($('.color-2'));
+
 
 // changes the color of the timer box depending on time remaining
-    function timerColor(rgb, previousTime) {
-        // var backgroundColor = [250,0,0];
-        var difference = currentGame.remainingTime - previousTime;
-        if (rgb[1] >= 0 && rgb[1] < 250) {
-            rgb[1] += difference * 2;
-        }else if (rgb[0] > 0) {
-            rgb[0] += difference * 20;
+    function timerColor() {
+        if (currentGame.remainingTime > 200) {
+            $('#timer-box').css('background-color', 'green');
+        }else if (currentGame.remainingTime > 100) {
+            $('#timer-box').css('background-color', 'yellow');
+        }else {
+            $('#timer-box').css('background-color', 'red');
         };
-        console.log(rgb[1]);
-
-        var timerColor = rgb.toString();
-        $('#score-box').css('background-color', '(' + timerColor + ')');
-
-        return rgb;
+        console.log(currentGame.remainingTime);
     };
 //runs the timer
     function timer () {
         var intervalId = setInterval(function() {
-            var rgb = [250,0,0];
-            var previousTime = 150;
-            var endTime = currentGame.endTime;
-            var currentTime = Date.now();
-
-            if (currentGame.remainingTime >= 0) {
+            if (currentGame.remainingTime > 0) {
                 $('#timer').html(currentGame.remainingTimeString);
-                rgb = timerColor(rgb, previousTime);
-                previousTime = currentGame.remainingTime;
+                timerColor();
             } else {
                 $('#timer').html('0');
                 clearTimer(intervalId);
