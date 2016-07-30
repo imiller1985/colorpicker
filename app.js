@@ -1,117 +1,113 @@
 // creates random colors for left and right boxes. Second color has an opacity
-// of 0.1 higher or lower than the first box
+// of 0.1 higher or lower than the first box.
 function randomColors() {
-    var colors = new Color();
+    colors = new Color();
     $('.color-1').css('background-color', colors.firstColor);
     $('.color-2').css('background-color', colors.secondColor);
 };
 
+//finds the opacity used for comparing between the selected color and the nonselected
 function findOpacity(target) {
     return target.css('background-color').split(',')[3].trim();
 };
 
+//resets border color to black. Used for reseting games
 function borderReset(target) {
     return target.css('border', '2px solid black')
 };
 
+function changeScore() {
+    $('#score').html(currentGame.score);
+};
+
+// changes the color of the timer box depending on time remaining
+function timerColor() {
+    if (currentGame.remainingTime > 200) {
+        $('#timer-box').css('background-color', 'green');
+    }else if (currentGame.remainingTime > 100) {
+        $('#timer-box').css('background-color', 'yellow');
+    }else {
+        $('#timer-box').css('background-color', 'red');
+    };
+};
+
+// stops the timer
+function clearTimer (intervalId) {
+    clearInterval(intervalId);
+};
+
+//runs the timer, changes timer box color, and resets game when time runs out
+function timer () {
+    var intervalId = setInterval(function() {
+        if (currentGame.remainingTime > 0) {
+            $('#timer').html(currentGame.remainingTimeString);
+            timerColor();
+        } else {
+            $('#timer').html('0');
+            clearTimer(intervalId);
+            $('.color-1').css('background', 'black');
+            $('.color-2').css('background', 'black');
+            $('.color-1').css('border', '2px solid black');
+            $('.color-2').css('border', '2px solid black');
+            $('.color-1').html('GAME');
+            $('.color-2').html('OVER!');
+        };
+    }, 100);
+};
+
+//compares selected color to unselected. Depending on outcome (darker or lighter color selected), makes appropriate game changes
+//including adding/subtracting points, style changes, and changes to the timer
 function selectionChecker (event) {
-// DRY function for finding opacity level
     var $target = $(event.target)
 
-    function scoreBoxColor() {
-        console.log(currentGame.score)
-        if (currentGame.score > 10) {
-            $('#score-box').css('background-color', 'red');
-        }
-    };
-// Checks if correct box is clicked. Incements/ decrements score.
+// Checks if correct box is clicked based on opacity. Incements/ decrements score.
     if (currentGame.remainingTime >= 0) {
         if ($target.hasClass('color-1')){
-            var opacityClicked = findOpacity($target);
-            var otherOpacity = findOpacity($('.color-2'));
-            if (opacityClicked > otherOpacity) {
+            if (colors.leftOpacity > colors.rightOpacity) {
                 currentGame.addPoint();
                 currentGame.addTime();
                 $('.color-1').css('border', '10px solid #2DFA56');
                 borderReset($('.color-2'));
-                $('#score').html(currentGame.score);
+                changeScore();
             }else{
                 currentGame.subtractPoint();
                 currentGame.subtractTime();
                 $('.color-1').css('border', '10px solid #F33F1B');
                 borderReset($('.color-2'));
-                $('#score').html(currentGame.score);
+                changeScore();
             };
         }else if ($target.hasClass('color-2')){
-            var opacityClicked = findOpacity($target);
-            var otherOpacity = findOpacity($('.color-1'));
-            if (opacityClicked > otherOpacity){
+            if (colors.rightOpacity > colors.leftOpacity){
                 currentGame.addPoint();
                 currentGame.addTime();
                 $('.color-2').css('border', '10px solid #2DFA56');
                 borderReset($('.color-1'));
-                $('#score').html(currentGame.score);
+                changeScore();
             }else {
                 currentGame.subtractPoint();
                 currentGame.subtractTime();
                 $('.color-2').css('border', '10px solid #F33F1B');
                 borderReset($('.color-1'));
-                $('#score').html(currentGame.score);
+                changeScore();
             };
         };
-        randomColors();
         $('#level').html(currentGame.level);
+        randomColors();
     };
 };
 
+//creates a new game objects and resets styles and game properties
 function newGame () {
     currentGame = new Game();
-    var backgroundColor = 0;
     randomColors();
-//resets the color box scores, borders, timer, and text
-    $('#score').html(currentGame.score);
+    changeScore();
     $('#level').html(currentGame.level);
     $('.colors-box').css('border', 'none');
     $('.color-1').html('');
     $('.color-2').html('');
-    timer();
     borderReset($('.color-1'));
     borderReset($('.color-2'));
-
-
-// changes the color of the timer box depending on time remaining
-    function timerColor() {
-        if (currentGame.remainingTime > 200) {
-            $('#timer-box').css('background-color', 'green');
-        }else if (currentGame.remainingTime > 100) {
-            $('#timer-box').css('background-color', 'yellow');
-        }else {
-            $('#timer-box').css('background-color', 'red');
-        };
-        console.log(currentGame.remainingTime);
-    };
-//runs the timer
-    function timer () {
-        var intervalId = setInterval(function() {
-            if (currentGame.remainingTime > 0) {
-                $('#timer').html(currentGame.remainingTimeString);
-                timerColor();
-            } else {
-                $('#timer').html('0');
-                clearTimer(intervalId);
-                $('.color-1').css('background', 'black');
-                $('.color-2').css('background', 'black');
-                $('.color-1').css('border', '2px solid black');
-                $('.color-2').css('border', '2px solid black');
-                $('.color-1').html('GAME');
-                $('.color-2').html('OVER!');
-            };
-        }, 100);
-// stops the timer
-        function clearTimer (intervalId) {
-            clearInterval(intervalId);
-        };
-    };
+    timer();
 };
 
 class Color {
@@ -123,8 +119,7 @@ class Color {
         this.rightOpacity = secondOpacity(this.leftOpacity);
 
         function secondOpacity(firstOpacity){
-// creates random boolean used to
-// used to keep order of brighter darker color random
+// creates random boolean used to mix order of darker and lighter colors (left or right side)
             var randomBoolean = Math.random() >= 0.5;
             var opacity = firstOpacity;
 // checks if boolean is true or false and then adds or subtracks 0.1 from opacity
@@ -190,14 +185,12 @@ class Game {
             this.endtime += 500;
         };
     };
-//resets clock
-    resetClock() {
-        this.endTime += 10000;
-    }
+
 //subtracts two seconds from time
     subtractTime() {
         this.endTime -= 2000;
     };
+
 //returns amount of time left in game in 10th's of a second
     calcRemainingTime() {
         return (Math.round((currentGame.endTime - Date.now()) / 100));

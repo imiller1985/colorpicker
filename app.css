@@ -1,3 +1,7 @@
+body {
+    background-color: #D7CEC7;
+}
+
 .color-1{
     height: 500px;
     border: 2px solid black;
@@ -16,19 +20,18 @@
 
 .scoring-row{
     font-size: 30px;
-
 }
 
 #score-box{
-    background-color: orange;
+    background-color: #A0D36E;
 }
 
 #timer-box{
-    background-color: green;
+    background-color: yellow;
 }
 
 #level-box{
-    background-color: pink;
+    background-color: #FACB47;
 }
 
 .button{
